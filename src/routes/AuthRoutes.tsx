@@ -14,7 +14,7 @@ function AuthRoutes() {
           <Route path={"/signup"} element={<Signup />} />
         </Route>
 
-        <Route path="*" element={<AuthLayout />}>
+        <Route path="/" element={<AuthLayout />}>
           <Route path={"*"} element={<Error />} />
         </Route>
       </Routes>

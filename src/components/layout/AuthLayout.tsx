@@ -5,7 +5,7 @@ function AuthLayout() {
   return (
     <div className="w-screen h-screen bg-gray-300 text-white flex flex-col items-center justify-center">
       <main className="bg-gray-500 p-8  rounded-2xl flex flex-col items-center md:min-w-md shadow-2xl">
-        <img src={Logo} alt="Logo" className="my-5 w-35" />
+        <img src={Logo} alt="Logo" className="my-5 w-35"/>
 
         <Outlet />
       </main>

@@ -10,9 +10,12 @@ function Input({ legend, ...props }: InputProps) {
           {legend}
         </legend>
       )}
-      <input type="text" {...props}
-      className="w-full h-12 bg-transparent rounded-2xl border border-gray-300 px-4 outline-none
-      focus-within:border-green-100"/>
+      <input
+        type="text"
+        {...props}
+        className="w-full h-12 bg-transparent text-gray-200 rounded-2xl border border-gray-300 px-4 outline-none
+      focus-within:border-green-100"
+      />
     </fieldset>
   )
 }

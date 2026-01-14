@@ -17,3 +17,19 @@
 a {
   outline: none;
 }
+
+select {
+  appearance: none;
+
+  background-image: url("../assets/icons/chevron-down.svg");
+  background-repeat: no-repeat;
+  background-position: right 1.25rem center;
+
+  padding-right: 2rem;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}

@@ -2,12 +2,7 @@ type ButtonProps = React.ComponentProps<"button"> & {
   isLoading?: boolean
 }
 
-function Button({
-  type = "button",
-  isLoading,
-  children,
-  ...props
-}: ButtonProps) {
+function Button({ type = "button", isLoading, children, ...props }: ButtonProps) {
   return (
     <div className="flex justify-center items-center">
       <button

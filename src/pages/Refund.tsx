@@ -1,4 +1,5 @@
-import { useState } from "react"
+import React, { useState } from "react"
+import { useNavigate } from "react-router"
 import { CATEGORIES, CATEGORIES_KEYS } from "../utils/category"
 
 import Input from "../components/Input"
@@ -7,17 +8,19 @@ import Select from "../components/Select"
 import Button from "../components/Button"
 
 function Refund() {
-  function onSubmit() {
-    console.log(Category, Request, Value, Confirm)
-  }
-
   const [Request, SetRequest] = useState("")
   const [Category, SetCategory] = useState("")
-  const [Value, SetValue] = useState("")
-  const [Confirm, SetConfirm] = useState("")
+  const [Amount, SetAmount] = useState("")
+  const [Filename, SetFilename] = useState<File | null>(null)
   const [isLoading, SetIsLoading] = useState(false)
 
-  // console.log(CATEGORIES, CATEGORIES_KEYS)
+  const Navigate = useNavigate()
+
+  function onSubmit(e: React.FormEvent) {
+    e.preventDefault()
+
+    console.log(Request, Category, Amount, Filename?.name)
+  }
 
   return (
     <form
@@ -55,18 +58,17 @@ function Refund() {
 
         <Input
           required
-          value={Value}
-          placeholder="0.00"
           legend="Valor"
-          type="number"
-          onChange={(e) => SetValue(e.target.value)}
+          value={Amount}
+          onChange={(e) => SetAmount(e.target.value)}
+          placeholder="0.00"
         />
       </div>
 
       <Upload
         legend="Comprovante"
-        value={Confirm}
-        onChange={(e) => SetConfirm(e.target.value)}
+        filename={Filename && Filename.name}
+        onChange={(e) => e.target.files && SetFilename(e.target.files[0])}
       />
 
       <Button type="submit" isLoading={isLoading}>

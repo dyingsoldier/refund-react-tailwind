@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import { useState } from "react"
 import { useNavigate } from "react-router"
 import { CATEGORIES, CATEGORIES_KEYS } from "../utils/category"
 
@@ -14,11 +14,12 @@ function Refund() {
   const [Filename, SetFilename] = useState<File | null>(null)
   const [isLoading, SetIsLoading] = useState(false)
 
-  const Navigate = useNavigate()
+  const navigate = useNavigate()
 
   function onSubmit(e: React.FormEvent) {
     e.preventDefault()
 
+    navigate("/confirm", { state: { fromSubmit: true } })
     console.log(Request, Category, Amount, Filename?.name)
   }
 
@@ -37,14 +38,14 @@ function Refund() {
       </header>
 
       <Input
-        required
+        // required
         value={Request}
         legend="Nome da Solicitação"
         onChange={(e) => SetRequest(e.target.value)}
       />
       <div className="flex gap-3">
         <Select
-          required
+          // required
           value={Category}
           legend="Categoria"
           onChange={(e) => SetCategory(e.target.value)}
@@ -57,7 +58,7 @@ function Refund() {
         </Select>
 
         <Input
-          required
+          // required
           legend="Valor"
           value={Amount}
           onChange={(e) => SetAmount(e.target.value)}

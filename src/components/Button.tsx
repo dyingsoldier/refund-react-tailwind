@@ -1,19 +1,38 @@
+import classMerge from "../utils/classMerge"
+
 type ButtonProps = React.ComponentProps<"button"> & {
   isLoading?: boolean
+  variant?: "base" | "md" | "sm"
 }
 
-function Button({ type = "button", isLoading, children, ...props }: ButtonProps) {
+const ButtonVariant = {
+  variants: {
+    sm: "h-10 w-10",
+    md: "h-12 w-12",
+    base: "h-12 w-full",
+  },
+}
+
+function Button({
+  children,
+  isLoading,
+  className,
+  type = "button",
+  variant = "base",
+  ...props
+}: ButtonProps) {
   return (
-    <div className="flex justify-center items-center">
-      <button
-        className="bg-green-100 text-white p-1 h-12 rounded-2xl cursor-pointer w-full flex items-center justify-center outline-none
-        transition ease-linear hover:bg-green-200 hover:scale-103 disabled:opacity-50 disabled:cursor-progress"
-        disabled={isLoading}
-        {...props}
-      >
-        {children}
-      </button>
-    </div>
+    <button
+      disabled={isLoading}
+      className={classMerge([
+        "flex items-center justify-center bg-green-100 text-white p-1 rounded-2xl cursor-pointer outline-none transition ease-linear hover:bg-green-200 hover:scale-103 disabled:opacity-50 disabled:cursor-progress",
+        ButtonVariant.variants[variant],
+        className,
+      ])}
+      {...props}
+    >
+      {children}
+    </button>
   )
 }
 

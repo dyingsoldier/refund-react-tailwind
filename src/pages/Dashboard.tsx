@@ -5,6 +5,16 @@ import Button from "../components/Button"
 import RefundItem from "../components/RefundItem"
 import searchSVG from "../assets/icons/search.svg"
 
+import { CATEGORIES } from "../utils/category"
+
+const refundExample = {
+  id: "1",
+  username: "Manoel",
+  category: "Alimentação",
+  amount: 100,
+  icon: CATEGORIES["food"].icon,
+}
+
 function Dashboard() {
   const [name, setName] = useState("")
 
@@ -32,7 +42,7 @@ function Dashboard() {
       </form>
 
       <div>
-        <RefundItem />
+        <RefundItem data={refundExample} />
       </div>
     </div>
   )

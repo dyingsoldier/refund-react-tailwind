@@ -2,16 +2,19 @@ import { useState } from "react"
 
 import Input from "../components/Input"
 import Button from "../components/Button"
+import Pagination from "../components/Pagination"
+
 import RefundItem from "../components/RefundItem"
 import searchSVG from "../assets/icons/search.svg"
 
 import { CATEGORIES } from "../utils/category"
+import { formatCurrency } from "../utils/formatCurrency"
 
 const refundExample = {
   id: "1",
   username: "Manoel",
   category: "Alimentação",
-  amount: 100,
+  amount: formatCurrency(100),
   icon: CATEGORIES["food"].icon,
 }
 
@@ -25,7 +28,7 @@ function Dashboard() {
   }
 
   return (
-    <div className="bg-gray-500 rounded-xl p-10 md:min-w-md">
+    <div className="bg-gray-500 rounded-xl p-10 lg:w-lg">
       <h1 className="text-gray-100 font-bold text-xl">Solicitações</h1>
 
       <form
@@ -41,8 +44,18 @@ function Dashboard() {
         </Button>
       </form>
 
-      <div>
+      <div className="mt-6 gap-1 flex flex-col max-h-[21.4rem] overflow-y-scroll overflow-x-hidden">
         <RefundItem data={refundExample} />
+        <RefundItem data={refundExample} />
+        <RefundItem data={refundExample} />
+        <RefundItem data={refundExample} />
+        <RefundItem data={refundExample} />
+        <RefundItem data={refundExample} />
+      </div>
+
+
+      <div className="mt-6">
+        <Pagination current={1} total={3} />
       </div>
     </div>
   )

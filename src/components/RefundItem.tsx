@@ -2,7 +2,7 @@ type RefundItemProps = {
   id: string
   username: string
   category: string
-  amount: number
+  amount: string
   icon: string
 }
 
@@ -14,7 +14,7 @@ function RefundItem({ data, ...props }: LinkProps) {
   return (
     <a
       href=""
-      className="flex items-center mt-6 gap-2 rounded-2xl p-3 hover:bg-green-200/25"
+      className="flex items-center gap-2 rounded-2xl p-3 mr-1 transition ease-in-out  hover:bg-green-200/20"
       {...props}
     >
       <img src={data.icon} alt="icon de category" className="w-8 h-8" />
@@ -24,8 +24,8 @@ function RefundItem({ data, ...props }: LinkProps) {
         <p className="text-xs text-gray-200">{data.category}</p>
       </div>
 
-      <span className="text-xs text-gray-100 font-semibold">
-        <small className="font-normal gray-200">R$ </small>
+      <span className="text-sm p-2 text-gray-100 font-semibold">
+        <small className="font-normal text-gray-200 gray-200">R$</small>
         {data.amount}
       </span>
     </a>

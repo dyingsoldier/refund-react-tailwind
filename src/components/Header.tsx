@@ -4,7 +4,9 @@ import Logout from "../assets/icons/logout.svg"
 function Header() {
   return (
     <header className="w-full flex justify-between items-center">
-      <img src={Logo} alt="logo icon" className="cursor-pointer my-8" />
+      <a href="/">
+        <img src={Logo} alt="logo icon" className="cursor-pointer my-8" />
+      </a>
 
       <div className="flex items-center gap-3">
         <p className="font-medium">Olá, Manoel</p>

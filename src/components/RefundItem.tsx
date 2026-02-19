@@ -33,3 +33,4 @@ function RefundItem({ data, ...props }: LinkProps) {
 }
 
 export default RefundItem
+export type { RefundItemProps }

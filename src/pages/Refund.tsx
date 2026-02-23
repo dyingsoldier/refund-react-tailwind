@@ -7,6 +7,8 @@ import Upload from "../components/Upload"
 import Select from "../components/Select"
 import Button from "../components/Button"
 
+import fileSvg from "../assets/icons/file.svg"
+
 function Refund() {
   const [Request, SetRequest] = useState("")
   const [Category, SetCategory] = useState("")
@@ -70,11 +72,22 @@ function Refund() {
         />
       </div>
 
-      <Upload
-        legend="Comprovante"
-        filename={Filename && Filename.name}
-        onChange={(e) => e.target.files && SetFilename(e.target.files[0])}
-      />
+      {params.id ? (
+        <a
+          href="https://fonts.google.com/"
+          target="_blank"
+          className="text-sm text-green-100 font-semibold flex items-center justify-center gap-2 my-5 hover:opacity-70 transition ease-linear"
+        >
+          <img src={fileSvg} alt="icon de comprovante" />
+          Acesse o Comprovante
+        </a>
+      ) : (
+        <Upload
+          legend="Comprovante"
+          filename={Filename && Filename.name}
+          onChange={(e) => e.target.files && SetFilename(e.target.files[0])}
+        />
+      )}
 
       <Button type="submit" isLoading={isLoading}>
         {params.id ? "Voltar" : "Enviar"}

@@ -1,11 +1,13 @@
 import { useState } from "react"
-import { useNavigate } from "react-router"
+import { useNavigate, useParams } from "react-router"
 import { CATEGORIES, CATEGORIES_KEYS } from "../utils/category"
 
 import Input from "../components/Input"
 import Upload from "../components/Upload"
 import Select from "../components/Select"
 import Button from "../components/Button"
+
+import fileSvg from "../assets/icons/file.svg"
 
 function Refund() {
   const [Request, SetRequest] = useState("")
@@ -15,10 +17,13 @@ function Refund() {
   const [isLoading, SetIsLoading] = useState(false)
 
   const navigate = useNavigate()
+  const params = useParams<{ id: string }>()
 
   function onSubmit(e: React.FormEvent) {
     e.preventDefault()
-
+    if (params.id) {
+      return navigate(-1)
+    }
     navigate("/confirm", { state: { fromSubmit: true } })
     console.log(Request, Category, Amount, Filename?.name)
   }
@@ -42,6 +47,7 @@ function Refund() {
         value={Request}
         legend="Nome da Solicitação"
         onChange={(e) => SetRequest(e.target.value)}
+        disabled={!!params.id}
       />
       <div className="flex gap-3">
         <Select
@@ -66,14 +72,25 @@ function Refund() {
         />
       </div>
 
-      <Upload
-        legend="Comprovante"
-        filename={Filename && Filename.name}
-        onChange={(e) => e.target.files && SetFilename(e.target.files[0])}
-      />
+      {params.id ? (
+        <a
+          href="https://fonts.google.com/"
+          target="_blank"
+          className="text-sm text-green-100 font-semibold flex items-center justify-center gap-2 my-5 hover:opacity-70 transition ease-linear"
+        >
+          <img src={fileSvg} alt="icon de comprovante" />
+          Acesse o Comprovante
+        </a>
+      ) : (
+        <Upload
+          legend="Comprovante"
+          filename={Filename && Filename.name}
+          onChange={(e) => e.target.files && SetFilename(e.target.files[0])}
+        />
+      )}
 
       <Button type="submit" isLoading={isLoading}>
-        Enviar
+        {params.id ? "Voltar" : "Enviar"}
       </Button>
     </form>
   )

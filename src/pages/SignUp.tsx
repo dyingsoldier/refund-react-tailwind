@@ -1,7 +1,20 @@
 import { useState } from "react"
+import { z, ZodError } from "zod"
 
 import Input from "../components/Input"
 import Button from "../components/Button"
+
+const SignUpSchema = z
+  .object({
+    name: z.string().trim().min(1, { message: "Se tem nome né ?" }),
+    email: z.string().trim().min(1, { message: "Precisa do email fi" }),
+    password: z.string().min(8, { message: "Preciso de 8 caracteres" }),
+    PasswordConfirm: z.string({ message: "redigita a senha ai" }),
+  })
+  .refine((data) => data.password === data.PasswordConfirm, {
+    message: "as senhas n sao iguais",
+    path: ["PasswordConfirm"],
+  })
 
 function SignUp() {
   const [name, SetName] = useState("")
@@ -13,7 +26,26 @@ function SignUp() {
   function OnSubmit(e: React.FormEvent) {
     e.preventDefault()
 
-    console.log(name, email, password, PasswordConfirm)
+    try {
+      SetIsLoading(true)
+
+      const data = SignUpSchema.parse({
+        name,
+        email,
+        password,
+        PasswordConfirm,
+      })
+
+      console.log(name, email, password, PasswordConfirm)
+    } catch (error) {
+      if (error instanceof ZodError) {
+        return alert(error.issues[0].message)
+      }
+
+      alert("não sei qq deu")
+    } finally {
+      SetIsLoading(false)
+    }
   }
   return (
     <form onSubmit={OnSubmit} className="w-full flex flex-col gap-5">

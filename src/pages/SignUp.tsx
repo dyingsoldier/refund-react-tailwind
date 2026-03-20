@@ -43,9 +43,7 @@ function SignUp() {
       })
 
       await api.post("/users", data)
-      if (confirm("Usuario Cadastrado com sucesso, Deseja retornar para o login ?")) {
-        navigate("/")
-      }
+      navigate("/")
     } catch (error) {
       console.log(error)
 

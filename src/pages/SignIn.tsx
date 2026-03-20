@@ -1,22 +1,39 @@
 import { useActionState } from "react"
+import { z, ZodError } from "zod"
+import { AxiosError } from "axios"
+import { api } from "../services/api"
 
 import Input from "../components/Input"
 import Button from "../components/Button"
+
+const signInSchema = z.object({
+  email: z.email({ message: "E-mail Inválido" }).trim(),
+  password: z.string().trim().min(1, { message: "Senha Inválida" }),
+})
 
 function SignIn() {
   const [state, formAction, isLoading] = useActionState(signInAction, null)
 
   async function signInAction(prevState: any, formData: FormData) {
-    const email = formData.get("email")
-    const password = formData.get("password")
+    try {
+      const data = signInSchema.parse({
+        email: formData.get("email"),
+        password: formData.get("password"),
+      })
 
-    console.log(email, password)
+      const response = await api.post("/sessions", data)
+      console.log(response.data)
+    } catch (error) {
+      if (error instanceof ZodError) {
+        return { message: error.issues[0].message }
+      }
 
-    await new Promise((resolve) => {
-      setTimeout(() => {
-        resolve("")
-      }, 2000)
-    })
+      if (error instanceof AxiosError) {
+        return { message: error.response?.data.message }
+      }
+
+      return { message: "Não foi possivel fazer o login." }
+    }
   }
 
   return (
@@ -35,6 +52,10 @@ function SignIn() {
         type="password"
         placeholder="Senha2025"
       />
+
+      <span className="my-1 capitalize text-red-500 font-medium text-sm text-center">
+        {state?.message}
+      </span>
 
       <Button type="submit" isLoading={isLoading}>
         Entrar

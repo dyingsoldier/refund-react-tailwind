@@ -1,35 +1,66 @@
-import { useState } from "react"
+import { useActionState } from "react"
+import { z, ZodError } from "zod"
+import { AxiosError } from "axios"
+import { api } from "../services/api"
 
 import Input from "../components/Input"
 import Button from "../components/Button"
 
+const signInSchema = z.object({
+  email: z.email({ message: "E-mail Inválido" }).trim(),
+  password: z.string().trim().min(1, { message: "Senha Inválida" }),
+})
+
 function SignIn() {
-  const [email, SetEmail] = useState("")
-  const [password, SetPassword] = useState("")
-  const [isLoading, SetIsLoading] = useState(false)
+  const [state, formAction, isLoading] = useActionState(signInAction, null)
 
-  function OnSubmit(e: React.FormEvent) {
-    e.preventDefault()
+  async function signInAction(prevState: any, formData: FormData) {
+    try {
+      const data = signInSchema.parse({
+        email: formData.get("email"),
+        password: formData.get("password"),
+      })
 
-    console.log(email, password)
+      const response = await api.post("/sessions", data)
+      console.log(response.data)
+    } catch (error) {
+      if (error instanceof ZodError) {
+        return { message: error.issues[0].message }
+      }
+
+      if (error instanceof AxiosError) {
+        return { message: error.response?.data.message }
+      }
+
+      return { message: "Não foi possivel fazer o login." }
+    }
   }
+
   return (
-    <form onSubmit={OnSubmit} className="w-full flex flex-col gap-5">
+    <form action={formAction} className="w-full flex flex-col gap-5">
       <Input
+        required
+        name="email"
         legend="E-mail"
         type="email"
         placeholder="email@email.com"
-        onChange={(e) => SetEmail(e.target.value)}
       />
       <Input
+        required
+        name="password"
         legend="Senha"
         type="password"
         placeholder="Senha2025"
-        onChange={(e) => SetPassword(e.target.value)}
       />
+
+      <span className="my-1 capitalize text-red-500 font-medium text-sm text-center">
+        {state?.message}
+      </span>
+
       <Button type="submit" isLoading={isLoading}>
         Entrar
       </Button>
+
       <div className=" my-1 text-center">
         <a
           href="/signup"

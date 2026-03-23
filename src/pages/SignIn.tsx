@@ -22,6 +22,11 @@ function SignIn() {
       })
 
       const response = await api.post("/sessions", data)
+
+      if (response) {
+        alert(`Login Realizado com Sucesso.`)
+      }
+
       console.log(response.data)
     } catch (error) {
       if (error instanceof ZodError) {

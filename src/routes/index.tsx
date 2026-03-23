@@ -1,5 +1,12 @@
 import { BrowserRouter } from "react-router"
 
+// * Contexto
+// import { use } from "react"
+// import { AuthContext } from "../context/AuthContext"
+
+//! Contexto com Hook
+import { useAuth } from "../hooks/useAuth"
+
 import AuthRoutes from "./AuthRoutes"
 import EmployeeRoutes from "./EmployeeRoutes"
 import ManagerRoutes from "./ManagerRoutes"
@@ -15,6 +22,9 @@ const session = {
 }
 
 function Routes() {
+  const context = useAuth()
+  console.log(context)
+
   function Route() {
     switch (session?.user.role) {
       case "employee":

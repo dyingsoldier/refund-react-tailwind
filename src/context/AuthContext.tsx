@@ -1,17 +1,25 @@
 import { createContext, type ReactNode } from "react"
+import { useState } from "react"
 
-// Tipagem de children
-type ContextProps = {
-  children: ReactNode
+// usando a Tipagem UserAPIResponse (Usado Globalmente sem precisar de import)
+// src/dtos/user.d.ts
+type AuthContext = {
+  session: null | UserAPIResponse
 }
 
-// Criação de Contexto
-export const AuthContext = createContext({})
+// Props de children
+type ContextProps = { children: ReactNode }
 
-// Repassando o Filho de AuthProvider que será <Routes />
+// Criação de Contexto
+export const AuthContext = createContext({} as AuthContext)
+
+// Exportando func AuthProvider para a Route
+// children vai equivaler a <Routes /> quando for utilizada
 export function AuthProvider({ children }: ContextProps) {
+  const [session, setSession] = useState<null | UserAPIResponse>(null)
+
   return (
-    <AuthContext.Provider value={{ name: "manoel" }}>
+    <AuthContext.Provider value={ { session } }>
       {children}
     </AuthContext.Provider>
   )

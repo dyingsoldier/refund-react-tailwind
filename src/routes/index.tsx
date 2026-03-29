@@ -15,24 +15,21 @@ import Loading from "../components/Loading"
 import Error from "../pages/NotFound/404Error"
 
 const isLoading = false
-const session = {
-  user: {
-    role: "",
-  },
-}
 
 function Routes() {
-  const context = useAuth()
-  console.log(context)
+  const { session } = useAuth()
 
   function Route() {
     switch (session?.user.role) {
       case "employee":
         return <EmployeeRoutes />
+
       case "manager":
         return <ManagerRoutes />
+
       case "perdido":
         return <Error />
+
       default:
         return <AuthRoutes />
     }

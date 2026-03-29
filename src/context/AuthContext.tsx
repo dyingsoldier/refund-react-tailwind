@@ -16,11 +16,11 @@ export const AuthContext = createContext({} as AuthContext)
 // Exportando func AuthProvider para a Route
 // children vai equivaler a <Routes /> quando for utilizada
 export function AuthProvider({ children }: ContextProps) {
-  const [session, setSession] = useState<null | UserAPIResponse>(null)
+  const [session, setSession] = useState<null | UserAPIResponse>({
+    user: { name: "Manel", role: "employee" },
+  })
 
   return (
-    <AuthContext.Provider value={ { session } }>
-      {children}
-    </AuthContext.Provider>
+    <AuthContext.Provider value={{ session }}>{children}</AuthContext.Provider>
   )
 }

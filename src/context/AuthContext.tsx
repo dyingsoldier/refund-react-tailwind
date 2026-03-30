@@ -1,30 +1,53 @@
 import { createContext, type ReactNode } from "react"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 
-// usando a Tipagem UserAPIResponse (Usado Globalmente sem precisar de import)
-// src/dtos/user.d.ts
+type ContextProps = { children: ReactNode }
+
 type AuthContext = {
+  isLoading: boolean
+
   session: null | UserAPIResponse
   save: (data: UserAPIResponse) => void
 }
 
-// Props de children
-type ContextProps = { children: ReactNode }
+const LOCAL_STORAGE_KEY = "@refund"
 
-// Criação de Contexto
 export const AuthContext = createContext({} as AuthContext)
 
-// Exportando func AuthProvider para a Route
-// children vai equivaler a <Routes /> quando for utilizada
 export function AuthProvider({ children }: ContextProps) {
   const [session, setSession] = useState<null | UserAPIResponse>(null)
+  const [isLoading, setIsLoading] = useState(true)
 
   function save(data: UserAPIResponse) {
+    localStorage.setItem(`${LOCAL_STORAGE_KEY}:user`, JSON.stringify(data.user))
+    localStorage.setItem(
+      `${LOCAL_STORAGE_KEY}:token`,
+      JSON.stringify(data.token),
+    )
+
     setSession(data)
   }
 
+  function loadUser() {
+    const user = localStorage.getItem(`${LOCAL_STORAGE_KEY}:user`)
+    const token = localStorage.getItem(`${LOCAL_STORAGE_KEY}:token`)
+
+    if (user && token) {
+      setSession({
+        user: JSON.parse(user),
+        token,
+      })
+    }
+
+    setIsLoading(false)
+  }
+
+  useEffect(() => {
+    loadUser()
+  })
+
   return (
-    <AuthContext.Provider value={{ session, save }}>
+    <AuthContext.Provider value={{ session, save, isLoading }}>
       {children}
     </AuthContext.Provider>
   )

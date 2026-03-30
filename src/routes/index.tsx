@@ -14,10 +14,8 @@ import ManagerRoutes from "./ManagerRoutes"
 import Loading from "../components/Loading"
 import Error from "../pages/NotFound/404Error"
 
-const isLoading = false
-
 function Routes() {
-  const { session } = useAuth()
+  const { session, isLoading } = useAuth()
 
   function Route() {
     switch (session?.user.role) {

@@ -1,6 +1,9 @@
 import { useState } from "react"
 import { useNavigate, useParams } from "react-router"
 import { CATEGORIES, CATEGORIES_KEYS } from "../utils/category"
+import { z, ZodError } from "zod"
+
+import { zodResolver } from "@hookform/resolvers/zod"
 
 import Input from "../components/Input"
 import Upload from "../components/Upload"
@@ -8,6 +11,14 @@ import Select from "../components/Select"
 import Button from "../components/Button"
 
 import fileSvg from "../assets/icons/file.svg"
+
+const refundSchema = z.object({
+  Request: z.string().trim().min(3, { message: "Qual Seria a Solicitação" }),
+  Category: z.string().min(1, { message: "Selecione uma Categoria" }),
+  Amount: z.coerce
+    .number()
+    .positive({ message: "Numeros Negativos Serão Desconsiderados" }),
+})
 
 function Refund() {
   const [Request, SetRequest] = useState("")
@@ -21,11 +32,31 @@ function Refund() {
 
   function onSubmit(e: React.FormEvent) {
     e.preventDefault()
+
     if (params.id) {
       return navigate(-1)
     }
-    navigate("/confirm", { state: { fromSubmit: true } })
-    console.log(Request, Category, Amount, Filename?.name)
+
+    try {
+      SetIsLoading(true)
+
+      const data = refundSchema.parse({
+        Request,
+        Category,
+        Amount: Amount.replace(",", "."),
+      })
+
+      console.log(data)
+      // navigate("/confirm", { state: { fromSubmit: true } })
+    } catch (error) {
+      if (error instanceof ZodError) {
+        return console.log(error.issues[0].message)
+      }
+
+      alert(`Não foi Possivel Enviar ${error}`)
+    } finally {
+      SetIsLoading(false)
+    }
   }
 
   return (
@@ -43,7 +74,7 @@ function Refund() {
       </header>
 
       <Input
-        // required
+        required
         value={Request}
         legend="Nome da Solicitação"
         onChange={(e) => SetRequest(e.target.value)}
@@ -51,7 +82,7 @@ function Refund() {
       />
       <div className="flex gap-3">
         <Select
-          // required
+          required
           value={Category}
           legend="Categoria"
           onChange={(e) => SetCategory(e.target.value)}
@@ -64,7 +95,7 @@ function Refund() {
         </Select>
 
         <Input
-          // required
+          required
           legend="Valor"
           value={Amount}
           onChange={(e) => SetAmount(e.target.value)}

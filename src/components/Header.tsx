@@ -4,7 +4,7 @@ import Logout from "../assets/icons/logout.svg"
 import { useAuth } from "../hooks/useAuth"
 
 function Header() {
-  const headerAuth = useAuth()
+  const auth = useAuth()
 
   return (
     <header className="w-full flex justify-between items-center">
@@ -13,11 +13,12 @@ function Header() {
       </a>
 
       <div className="flex items-center gap-3">
-        <p className="font-medium">Olá, {headerAuth.session?.user.name} </p>
+        <p className="font-medium">Olá, {auth.session?.user.name} </p>
         <img
           src={Logout}
           alt="logout icon"
           className="cursor-pointer my-8 hover:opacity-80 transition ease-linear"
+          onClick={auth.remove}
         />
       </div>
     </header>

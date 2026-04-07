@@ -3,8 +3,6 @@ import { useNavigate, useParams } from "react-router"
 import { CATEGORIES, CATEGORIES_KEYS } from "../utils/category"
 import { z, ZodError } from "zod"
 
-import { zodResolver } from "@hookform/resolvers/zod"
-
 import Input from "../components/Input"
 import Upload from "../components/Upload"
 import Select from "../components/Select"
@@ -13,19 +11,19 @@ import Button from "../components/Button"
 import fileSvg from "../assets/icons/file.svg"
 
 const refundSchema = z.object({
-  Request: z.string().trim().min(3, { message: "Qual Seria a Solicitação" }),
-  Category: z.string().min(1, { message: "Selecione uma Categoria" }),
-  Amount: z.coerce
+  name: z.string().trim().min(3, { message: "Qual Seria a Solicitação" }),
+  category: z.string().min(1, { message: "Selecione uma Categoria" }),
+  amount: z.coerce
     .number()
     .positive({ message: "Numeros Negativos Serão Desconsiderados" }),
 })
 
 function Refund() {
-  const [Request, SetRequest] = useState("")
-  const [Category, SetCategory] = useState("")
-  const [Amount, SetAmount] = useState("")
-  const [Filename, SetFilename] = useState<File | null>(null)
-  const [isLoading, SetIsLoading] = useState(false)
+  const [name, setName] = useState("")
+  const [category, setCategory] = useState("")
+  const [amount, setAmount] = useState("")
+  const [filename, setFilename] = useState<File | null>(null)
+  const [isLoading, setIsLoading] = useState(false)
 
   const navigate = useNavigate()
   const params = useParams<{ id: string }>()
@@ -38,24 +36,26 @@ function Refund() {
     }
 
     try {
-      SetIsLoading(true)
+      setIsLoading(true)
 
       const data = refundSchema.parse({
-        Request,
-        Category,
-        Amount: Amount.replace(",", "."),
+        name,
+        category,
+        amount: amount.replace(",", "."),
       })
 
       console.log(data)
       // navigate("/confirm", { state: { fromSubmit: true } })
     } catch (error) {
+      console.log(error)
+
       if (error instanceof ZodError) {
-        return console.log(error.issues[0].message)
+        return alert(error.issues[0].message)
       }
 
-      alert(`Não foi Possivel Enviar ${error}`)
+      alert(`Não foi Possivel Enviar a Solicitação. ${error}`)
     } finally {
-      SetIsLoading(false)
+      setIsLoading(false)
     }
   }
 
@@ -75,17 +75,17 @@ function Refund() {
 
       <Input
         required
-        value={Request}
+        value={name}
         legend="Nome da Solicitação"
-        onChange={(e) => SetRequest(e.target.value)}
+        onChange={(e) => setName(e.target.value)}
         disabled={!!params.id}
       />
       <div className="flex gap-3">
         <Select
           required
-          value={Category}
+          value={category}
           legend="Categoria"
-          onChange={(e) => SetCategory(e.target.value)}
+          onChange={(e) => setCategory(e.target.value)}
         >
           {CATEGORIES_KEYS.map((cat) => (
             <option value={cat} key={cat}>
@@ -97,8 +97,8 @@ function Refund() {
         <Input
           required
           legend="Valor"
-          value={Amount}
-          onChange={(e) => SetAmount(e.target.value)}
+          value={amount}
+          onChange={(e) => setAmount(e.target.value)}
           placeholder="0.00"
         />
       </div>
@@ -115,8 +115,8 @@ function Refund() {
       ) : (
         <Upload
           legend="Comprovante"
-          filename={Filename && Filename.name}
-          onChange={(e) => e.target.files && SetFilename(e.target.files[0])}
+          filename={filename && filename.name}
+          onChange={(e) => e.target.files && setFilename(e.target.files[0])}
         />
       )}
 

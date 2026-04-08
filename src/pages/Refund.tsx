@@ -2,6 +2,9 @@ import { useState } from "react"
 import { useNavigate, useParams } from "react-router"
 import { CATEGORIES, CATEGORIES_KEYS } from "../utils/category"
 import { z, ZodError } from "zod"
+import { AxiosError } from "axios"
+
+import { api } from "../services/api"
 
 import Input from "../components/Input"
 import Upload from "../components/Upload"
@@ -22,13 +25,13 @@ function Refund() {
   const [name, setName] = useState("")
   const [category, setCategory] = useState("")
   const [amount, setAmount] = useState("")
-  const [filename, setFilename] = useState<File | null>(null)
+  const [file, setFile] = useState<File | null>(null)
   const [isLoading, setIsLoading] = useState(false)
 
   const navigate = useNavigate()
   const params = useParams<{ id: string }>()
 
-  function onSubmit(e: React.FormEvent) {
+  async function onSubmit(e: React.FormEvent) {
     e.preventDefault()
 
     if (params.id) {
@@ -38,19 +41,36 @@ function Refund() {
     try {
       setIsLoading(true)
 
+      if (!file) {
+        return alert("Anexe o Comprovante")
+      }
+
+      const fileUploadForm = new FormData()
+      fileUploadForm.append("file", file)
+
+      const response = await api.post("/uploads", fileUploadForm)
+
       const data = refundSchema.parse({
         name,
         category,
         amount: amount.replace(",", "."),
       })
 
-      console.log(data)
-      // navigate("/confirm", { state: { fromSubmit: true } })
+      await api.post("/refunds", {
+        ...data,
+        filename: response.data.filename,
+      })
+
+      navigate("/confirm", { state: { fromSubmit: true } })
     } catch (error) {
       console.log(error)
 
       if (error instanceof ZodError) {
         return alert(error.issues[0].message)
+      }
+
+      if (error instanceof AxiosError) {
+        return alert(error.response?.data.message)
       }
 
       alert(`Não foi Possivel Enviar a Solicitação. ${error}`)
@@ -115,8 +135,8 @@ function Refund() {
       ) : (
         <Upload
           legend="Comprovante"
-          filename={filename && filename.name}
-          onChange={(e) => e.target.files && setFilename(e.target.files[0])}
+          filename={file && file.name}
+          onChange={(e) => e.target.files && setFile(e.target.files[0])}
         />
       )}
 

@@ -9,24 +9,22 @@ export const CATEGORIES = {
     name: "Alimentação",
     icon: Food,
   },
-  Others: {
+  others: {
     name: "Outros",
     icon: Others,
   },
-  Services: {
+  services: {
     name: "Serviços",
     icon: Services,
   },
-  Transport: {
+  transport: {
     name: "Transporte",
     icon: Transport,
   },
-  Accommodation: {
+  accommodation: {
     name: "Acomodação",
     icon: Accommodation,
   },
 }
 
-export const CATEGORIES_KEYS = Object.keys(CATEGORIES) as Array<
-  keyof typeof CATEGORIES
->
+export const CATEGORIES_KEYS = Object.keys(CATEGORIES) as Array<keyof typeof CATEGORIES>

@@ -1,5 +1,6 @@
 import { createContext, type ReactNode } from "react"
 import { useState, useEffect } from "react"
+import { api } from "../services/api"
 
 type ContextProps = { children: ReactNode }
 
@@ -21,10 +22,10 @@ export function AuthProvider({ children }: ContextProps) {
 
   function save(data: UserAPIResponse) {
     localStorage.setItem(`${LOCAL_STORAGE_KEY}:user`, JSON.stringify(data.user))
-    localStorage.setItem(
-      `${LOCAL_STORAGE_KEY}:token`,
-      JSON.stringify(data.token),
-    )
+    localStorage.setItem(`${LOCAL_STORAGE_KEY}:token`, JSON.stringify(data.token))
+
+    // Repassando o Token por default no login
+    api.defaults.headers.common["Authorization"] = `Bearer ${data.token}`
 
     setSession(data)
   }
@@ -43,6 +44,8 @@ export function AuthProvider({ children }: ContextProps) {
     const token = localStorage.getItem(`${LOCAL_STORAGE_KEY}:token`)
 
     if (user && token) {
+      api.defaults.headers.common["Authorization"] = `Bearer ${token}`
+
       setSession({
         user: JSON.parse(user),
         token,

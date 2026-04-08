@@ -24,14 +24,14 @@ const refundExample = [
     username: "Larissa",
     category: "Acomodação",
     amount: formatCurrency(50),
-    icon: CATEGORIES["Accommodation"].icon,
+    icon: CATEGORIES["accommodation"].icon,
   },
   {
     id: "3",
     username: "Gabriela",
     category: "Serviços",
     amount: formatCurrency(75.25),
-    icon: CATEGORIES["Services"].icon,
+    icon: CATEGORIES["services"].icon,
   },
 ]
 

@@ -12,7 +12,6 @@ import EmployeeRoutes from "./EmployeeRoutes"
 import ManagerRoutes from "./ManagerRoutes"
 
 import Loading from "../components/Loading"
-import Error from "../pages/NotFound/404Error"
 
 function Routes() {
   const { session, isLoading } = useAuth()
@@ -24,9 +23,6 @@ function Routes() {
 
       case "manager":
         return <ManagerRoutes />
-
-      case "perdido":
-        return <Error />
 
       default:
         return <AuthRoutes />

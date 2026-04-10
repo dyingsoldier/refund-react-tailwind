@@ -22,9 +22,8 @@ export function AuthProvider({ children }: ContextProps) {
 
   function save(data: UserAPIResponse) {
     localStorage.setItem(`${LOCAL_STORAGE_KEY}:user`, JSON.stringify(data.user))
-    localStorage.setItem(`${LOCAL_STORAGE_KEY}:token`, JSON.stringify(data.token))
+    localStorage.setItem(`${LOCAL_STORAGE_KEY}:token`, data.token)
 
-    // Repassando o Token por default no login
     api.defaults.headers.common["Authorization"] = `Bearer ${data.token}`
 
     setSession(data)

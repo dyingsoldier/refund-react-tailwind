@@ -1,11 +1,11 @@
-type UserAPIRole = "employee" | "manager" | "perdido"
+type UserAPIRole = "employee" | "manager"
 
 type UserAPIResponse = {
-  token?: string
+  token: string
   user: {
-    email?: string
-    name?: string
-    id?: string
+    email: string
+    name: string
+    id: string
     role: UserAPIRole
   }
 }

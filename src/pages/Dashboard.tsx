@@ -45,7 +45,6 @@ function Dashboard() {
 
   // Puxando Dados do usuario pelo contexto global.
   const context = useAuth()
-  console.log(context.session?.user.name)
 
   const [refunds, setRefunds] = useState<RefundItemProps[]>([
     refundExample[0],

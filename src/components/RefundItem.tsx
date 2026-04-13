@@ -1,6 +1,6 @@
 type RefundItemProps = {
   id: string
-  username: string
+  name: string
   category: string
   amount: string
   icon: string
@@ -20,7 +20,7 @@ function RefundItem({ data, ...props }: LinkProps) {
       <img src={data.icon} alt="icon de category" className="w-8 h-8" />
 
       <div className="flex flex-col flex-1">
-        <strong className="text-sm text-gray-100">{data.username}</strong>
+        <strong className="text-sm text-gray-100">{data.name}</strong>
         <p className="text-xs text-gray-200">{data.category}</p>
       </div>
 

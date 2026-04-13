@@ -9,56 +9,41 @@ import searchSVG from "../assets/icons/search.svg"
 import { AxiosError } from "axios"
 
 import { api } from "../services/api"
-import { CATEGORIES } from "../utils/category"
+import { CATEGORIES, CATEGORIES_KEYS } from "../utils/category"
 import { formatCurrency } from "../utils/formatCurrency"
 import { useAuth } from "../hooks/useAuth"
 
-const refundExample = [
-  {
-    id: "1",
-    username: "Manoel",
-    category: "Alimentação",
-    amount: formatCurrency(100),
-    icon: CATEGORIES["food"].icon,
-  },
-  {
-    id: "2",
-    username: "Larissa",
-    category: "Acomodação",
-    amount: formatCurrency(50),
-    icon: CATEGORIES["accommodation"].icon,
-  },
-  {
-    id: "3",
-    username: "Gabriela",
-    category: "Serviços",
-    amount: formatCurrency(75.25),
-    icon: CATEGORIES["services"].icon,
-  },
-]
 const PER_PAGE = 5
 
 function Dashboard() {
   const [name, setName] = useState("")
   const [page, setPage] = useState(1)
-  const [totalOfPages, setTotalPages] = useState(5)
+  const [totalOfPages, setTotalPages] = useState(0)
 
   // Puxando Dados do usuario pelo contexto global.
   const context = useAuth()
 
-  const [refunds, setRefunds] = useState<RefundItemProps[]>([
-    refundExample[0],
-    refundExample[1],
-    refundExample[2],
-  ])
+  const [refunds, setRefunds] = useState<RefundItemProps[]>([])
 
   async function fetchRefunds() {
     try {
-      const response = await api.get(
+      const response = await api.get<RefundsPaginationAPIResponse>(
         `/refunds?name=${name.trim()}&page=${page}&perPage${PER_PAGE}`,
       )
 
-      console.log(response.data)
+      // Buscando os Refunds na API
+      setRefunds(
+        response.data.refunds.map((refund) => ({
+          id: refund.id,
+          name: refund.user.name,
+          category: refund.category,
+          amount: formatCurrency(refund.amount),
+          icon: CATEGORIES[refund.category].icon,
+        })),
+      )
+
+      setTotalPages(response.data.pagination.totalPages)
+      // console.log(response.data.refunds[0])
     } catch (error) {
       console.log(error)
 

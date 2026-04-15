@@ -13,22 +13,21 @@ import { CATEGORIES, CATEGORIES_KEYS } from "../utils/category"
 import { formatCurrency } from "../utils/formatCurrency"
 import { useAuth } from "../hooks/useAuth"
 
-const PER_PAGE = 5
+const PER_PAGE = 2
 
 function Dashboard() {
   const [name, setName] = useState("")
   const [page, setPage] = useState(1)
   const [totalOfPages, setTotalPages] = useState(0)
+  const [refunds, setRefunds] = useState<RefundItemProps[]>([])
 
   // Puxando Dados do usuario pelo contexto global.
   const context = useAuth()
 
-  const [refunds, setRefunds] = useState<RefundItemProps[]>([])
-
   async function fetchRefunds() {
     try {
       const response = await api.get<RefundsPaginationAPIResponse>(
-        `/refunds?name=${name.trim()}&page=${page}&perPage${PER_PAGE}`,
+        `/refunds?name=${name.trim()}&page=${page}&perPage=${PER_PAGE}`,
       )
 
       // Buscando os Refunds na API
@@ -36,8 +35,9 @@ function Dashboard() {
         response.data.refunds.map((refund) => ({
           id: refund.id,
           name: refund.user.name,
-          category: refund.category,
+          description: refund.name,
           amount: formatCurrency(refund.amount),
+
           icon: CATEGORIES[refund.category].icon,
         })),
       )
@@ -55,6 +55,12 @@ function Dashboard() {
     }
   }
 
+  function onSubmit(e: React.FormEvent) {
+    e.preventDefault()
+
+    fetchRefunds()
+  }
+
   function handlePagination(action: "next" | "prev") {
     setPage((prevPage) => {
       if (action === "next" && prevPage < totalOfPages) {
@@ -69,14 +75,14 @@ function Dashboard() {
 
   useEffect(() => {
     fetchRefunds()
-  }, [])
+  }, [page])
 
   return (
     <div className="bg-gray-500 rounded-xl p-10 lg:w-lg">
       <h1 className="text-gray-100 font-bold text-xl">Solicitações</h1>
 
       <form
-        onSubmit={fetchRefunds}
+        onSubmit={onSubmit}
         className="flex flex-1 justify-between items-center mt-6 pb-6 border-b border-b-gray-400 md:flex-row gap-1.5"
       >
         <Input

@@ -1,7 +1,7 @@
 type RefundItemProps = {
   id: string
   name: string
-  category: string
+  description: string
   amount: string
   icon: string
 }
@@ -21,7 +21,7 @@ function RefundItem({ data, ...props }: LinkProps) {
 
       <div className="flex flex-col flex-1">
         <strong className="text-sm text-gray-100">{data.name}</strong>
-        <p className="text-xs text-gray-200">{data.category}</p>
+        <p className="text-xs text-gray-200">{data.description}</p>
       </div>
 
       <span className="text-sm p-2 text-gray-100 font-semibold">

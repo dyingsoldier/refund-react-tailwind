@@ -13,7 +13,7 @@ import { CATEGORIES, CATEGORIES_KEYS } from "../utils/category"
 import { formatCurrency } from "../utils/formatCurrency"
 import { useAuth } from "../hooks/useAuth"
 
-const PER_PAGE = 2
+const PER_PAGE = 3
 
 function Dashboard() {
   const [name, setName] = useState("")
